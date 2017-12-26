@@ -19,7 +19,7 @@ def conection_disconection(f):
 
 class DBqueries():
 
-    def __init__(self):
+    def init(self):
         try:
             self.db_string = "postgresql://postgres:revo1917@localhost/shop"
             self.db = sqlal.create_engine(self.db_string)
@@ -29,7 +29,7 @@ class DBqueries():
             print('shit - no such db')
             print(e)
 
-    def __del__(self):
+    def del(self):
         self.connection.close()
         print('Close class and connection')
 
@@ -110,5 +110,4 @@ db.get_category()
 
 # db.add_customer(user_name='Denis', email='ralko@gmail.com', password='qwerty',
 #                phone='0671773238', shipping_address='Kovalski 5')
-
 db.add_orders(customer_id=1, sum_price=20, delivery_data_time='2017-12-19 10:23:54', payment_type='card', dict={1: 2})
