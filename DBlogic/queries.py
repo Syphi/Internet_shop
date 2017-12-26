@@ -19,7 +19,7 @@ def conection_disconection(f):
 
 class DBqueries():
 
-    def init(self):
+    def __init__(self):
         try:
             self.db_string = "postgresql://postgres:revo1917@localhost/shop"
             self.db = sqlal.create_engine(self.db_string)
@@ -29,7 +29,7 @@ class DBqueries():
             print('shit - no such db')
             print(e)
 
-    def del(self):
+    def __del__(self):
         self.connection.close()
         print('Close class and connection')
 
