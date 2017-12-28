@@ -62,12 +62,18 @@ class DBqueries():
 
     def add_orders(self, customer_id, sum_price, delivery_data_time, payment_type, dict):
         print(1)
+        text_sql = sqlal.text('''
+                INSERT INTO orders(customer_id, sum_price, delivery_data_time, payment_type) 
+                VALUES ( :customer_id, :sum_price, :delivery_data_time, :payment_type)''')
+
         raw_sql = '''   INSERT INTO orders(customer_id, sum_price, delivery_data_time, payment_type) 
                     VALUES
-                    ({}, {}, '{}'::timestamp, '{}');'''.format(customer_id, sum_price, delivery_data_time, payment_type)
+                    ({}, {}, '{}'::timestamp, '{}');'''.\
+            format(customer_id, sum_price, delivery_data_time, payment_type)
 
-        print(raw_sql)
-        self.connection.execute(raw_sql)
+        print(text_sql)
+        self.connection.execute(text_sql, customer_id=customer_id, sum_price=sum_price,
+                                delivery_data_time=delivery_data_time, payment_type=payment_type)
         print(2)
 
         raw_sql = ''' SELECT id FROM orders 
