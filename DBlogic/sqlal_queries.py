@@ -43,27 +43,36 @@ class DbSqlalQueries():
                                 'phone': phone, 'shipping_address': shipping_address})
         self.connection.execute(insert)
 
-    def drop_orders_check(self):
-        pass
-
     def add_orders(self, customer_id, sum_price, delivery_data_time, payment_type, dict):
-        # insert = sa.insert(self.order_products)
-        # for key, value in dict.items():
-        #     insert = insert.values()
+        # add to orders table
+        insert = sa.insert(self.orders)
+        insert = insert.values({'customer_id': customer_id, 'sum_price': sum_price,
+                                'delivery_data_time': delivery_data_time, 'payment_type': payment_type})
+        self.connection.execute(insert)
 
-        # insert = sa.insert(self.orders)
-        # insert = insert.values({'customer_id': customer_id, 'sum_price': sum_price,
-        #                         'delivery_data_time': delivery_data_time, 'payment_type': payment_type})
-        # self.connection.execute(insert)
-
-        select = sa.select(self.orders)
+        # select last id in orders table
+        select = self.orders.select()
         select = select.where(sa.and_(self.orders.c.customer_id == customer_id,
                                       self.orders.c.sum_price == sum_price,
-                                      self.orders.c.delivery_date_time == delivery_data_time,
+                                      # self.orders.c.delivery_date_time == delivery_data_time, //how to
                                       self.orders.c.payment_type == payment_type))
         result_id = self.connection.execute(select).fetchall()
+        result_id = result_id[-1][0]
+
         print(result_id)
         print(dict)
+
+        # add to orders_product name
+        insert = self.order_products.insert()
+        insert_list = []
+        for key, value in dict.items():
+            print(result_id, key, value)
+            new_row = {'orders_id': result_id, 'product_id': key, 'number_prod': value}
+            insert_list.append(new_row)
+
+        print(insert_list)
+        self.connection.execute(insert, insert_list)
+
 
     def get_category(self):
         select = self.category.select()
@@ -105,7 +114,7 @@ test = DbSqlalQueries()
 
 
 test.add_orders(customer_id=1, sum_price=20, delivery_data_time='2004-10-19 10:23:54+02',
-                payment_type='card', dict={1: 2})
+                payment_type='card', dict={1: 2, 5: 10})
 
 
 # try:
