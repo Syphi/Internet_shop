@@ -53,7 +53,7 @@
     </role>
     <schema id="12" parent="2" name="public">
       <ObjectId>2200</ObjectId>
-      <IntrospectionTimestamp>2017-12-29.14:01:27.184</IntrospectionTimestamp>
+      <IntrospectionTimestamp>2018-01-02.11:20:52.891</IntrospectionTimestamp>
       <IntrospectionStateNumber>765</IntrospectionStateNumber>
       <Current>1</Current>
       <Visible>1</Visible>

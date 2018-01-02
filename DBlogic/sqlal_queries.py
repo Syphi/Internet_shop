@@ -78,13 +78,22 @@ class DbSqlalQueries():
         print(result)
         return result
 
-    def get_subcategories(self, category_id):
-        join = self.category.join(self.category,
-                                  category_id == self.category.c.parent_id)
-        result = sa.select([self.category]).select_from(join)
-        result_lst = self.connection.execute(result).fetchall()
+
+    def get_subcategory(self, category_id):
+        select = self.category.select()
+        select = select.where(self.category.c.id == category_id)
+        result = self.connection.execute(select).fetchall()
+
+        result_lst = []
+        result_lst.append(result[0])
+        while result[0][-1] != None:
+            select = self.category.select()
+            select = select.where(self.category.c.id == result[0][-1])
+            result = result = self.connection.execute(select).fetchall()
+            result_lst.append(result[0])
         print(result_lst)
         return result_lst
+
 
     def products_for_category(self, category_id):
         select = self.product.select()
@@ -136,9 +145,9 @@ class DbSqlalQueries():
 
     def get_customer_from_login_and_password(self, login, password):
         select = self.customer.select().\
-            where(self.customer.c.user_name == sa.bindparam(login)).\
-            where(self.customer.c.password == sa.bindparam(password))
-        return self.connection.execute(select, login=login, password=password).fetchall()
+            where(self.customer.c.user_name == login).\
+            where(self.customer.c.password == password)
+        return self.connection.execute(select).fetchall()
 
 test = DbSqlalQueries()
 # test.add_category('name2', '//pass2//', '2description2', 'slug2', 1)
@@ -149,10 +158,10 @@ test = DbSqlalQueries()
 # test.add_orders(customer_id=1, sum_price=777, delivery_data_time='2018-10-19 10:23:54+02',
 #                 payment_type='cash', dict={1: 1, 5: 40})
 # test.get_category().sort(key=lambda x: x[0])
-test.get_subcategories(4)
+test.get_subcategory(4)
 # test.products_for_category(1)
 # test.orders_for_customer(1)
-# print(test.get_customer_from_login_and_password('user', 'ralko96@gmail.com'))
+# test.get_customer_from_login_and_password('Denis', 'qwerty')
 
 
 # Pass
@@ -163,8 +172,9 @@ test.get_subcategories(4)
 # get_category
 # products_for_category
 # orders_for_customer
-
-
-# Fall
-# get_subcategories
 # get_customer_from_login_and_password
+# get_subcategories
+
+
+
+
