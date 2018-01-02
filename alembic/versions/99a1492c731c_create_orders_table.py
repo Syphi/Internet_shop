@@ -20,10 +20,10 @@ def upgrade():
     op.create_table(
         'orders',
         sa.Column('id', sa.Integer, primary_key=True),
-        sa.Column('customer_id',sa.Integer, sa.ForeignKey('customer.id')),
+        sa.Column('customer_id', sa.Integer, sa.ForeignKey('customer.id')),
         sa.Column('sum_price', sa.Numeric, nullable=False),
         sa.Column('delivery_data_time', sa.TIMESTAMP),
-        sa.Column('payment_type',sa.String(4), sa.CheckConstraint('payment_type' in ('cash', 'card'))),
+        sa.Column('payment_type', sa.String(4), sa.CheckConstraint('payment_type' in ('cash', 'card'))),
     )
 
 

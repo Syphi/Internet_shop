@@ -19,7 +19,7 @@ def conection_disconection(f):
 
 class DBqueries():
 
-    def init(self):
+    def __init__(self):
         try:
             self.db_string = "postgresql://postgres:revo1917@localhost/shop"
             self.db = sqlal.create_engine(self.db_string)
@@ -29,7 +29,7 @@ class DBqueries():
             print('shit - no such db')
             print(e)
 
-    def del(self):
+    def __del__(self):
         self.connection.close()
         print('Close class and connection')
 
@@ -62,12 +62,18 @@ class DBqueries():
 
     def add_orders(self, customer_id, sum_price, delivery_data_time, payment_type, dict):
         print(1)
+        text_sql = sqlal.text('''
+                INSERT INTO orders(customer_id, sum_price, delivery_data_time, payment_type) 
+                VALUES ( :customer_id, :sum_price, :delivery_data_time, :payment_type)''')
+
         raw_sql = '''   INSERT INTO orders(customer_id, sum_price, delivery_data_time, payment_type) 
                     VALUES
-                    ({}, {}, '{}'::timestamp, '{}');'''.format(customer_id, sum_price, delivery_data_time, payment_type)
+                    ({}, {}, '{}'::timestamp, '{}');'''.\
+            format(customer_id, sum_price, delivery_data_time, payment_type)
 
-        print(raw_sql)
-        self.connection.execute(raw_sql)
+        print(text_sql)
+        self.connection.execute(text_sql, customer_id=customer_id, sum_price=sum_price,
+                                delivery_data_time=delivery_data_time, payment_type=payment_type)
         print(2)
 
         raw_sql = ''' SELECT id FROM orders 
